@@ -16,20 +16,31 @@ const AddressForm = ({checkoutToken}) => {
     const methods = useForm();
 
     const countries = Object.entries(shippingCountries).map(([code, name]) => ({ id: code, label: name }));
+    
     console.log(countries); 
     const fetchShippingCountries = async( checkoutTokenId) => {
         const { countries } = await commerce.services.localeListShippingCountries(checkoutTokenId);
-
         
         setShippingCountries( countries ); 
         setShippingCountry(Object.keys(countries)[0]);
-        console.log(countries);
     }
     
+    const fetchSubdivisions = async( countryCode ) => {
+        const { subdivisions } = await commerce.services.localeListSubdivisions(countryCode);
+        
+        setshippingSubDivisions( subdivisions ); 
+        setshippingSubDivision(Object.keys( subdivisions )[0]);
+    }
+
+    useEffect(()=>{
+        if(shippingCountry)  fetchSubdivisions(shippingCountry);
+    }, [shippingCountry]);
+     
     useEffect(()=>{
         fetchShippingCountries(checkoutToken.id);
     }, []);
-     
+
+
     return (
         <>
             <Typography variant="h6" gutterbottom>Shipping Address</Typography>
@@ -53,15 +64,18 @@ const AddressForm = ({checkoutToken}) => {
                              ))}
                             </Select>
                         </Grid>
-                        {/* 
+                         
                         <Grid item xs={12} sm={6}>
-                            <InputLabel>Shipping Sub Division</InputLabel>
-                            <Select value={} fullWidth onChange={} >
-                                <MenuItem key={ } value={}>
-                                    Select Sub Division
+                            <InputLabel>Shipping Subdivision</InputLabel>
+                            <Select value={shippingSubDivision} fullWidth onChange={(e) => setshippingSubDivision(e.target.value)}>
+                            {Object.entries(shippingSubDivisions).map(([code, name]) => ({ id: code, label: name })).map((item) => (
+                                <MenuItem key={item.id} value={item.id}>
+                                    {item.label}
                                 </MenuItem>
+                                ))}
                             </Select>
                         </Grid>
+                        {/* 
                         <Grid item xs={12} sm={6}>
                             <InputLabel>Shipping Options</InputLabel>
                             <Select value={} fullWidth onChange={} >
@@ -69,9 +83,8 @@ const AddressForm = ({checkoutToken}) => {
                                     Select Options
                                 </MenuItem>
                             </Select>
-                        </Grid>  
-
-                        */}  
+                        </Grid> 
+                        */} 
                            
                     </Grid>
                 </form>
