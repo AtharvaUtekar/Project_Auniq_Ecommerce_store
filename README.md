@@ -1,5 +1,6 @@
 
-# <a href"https://auniq-ecommercestore.netlify.app/"> Live Site </a>
+# [Live site preview](https://auniq-ecommercestore.netlify.app/ "Live site preveiw Auniq e-commerce store")
+
 https://auniq-ecommercestore.netlify.app/
 
 ## Introduction
